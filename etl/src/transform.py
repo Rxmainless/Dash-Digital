@@ -53,6 +53,11 @@ def main():
     print(f"Total de linhas carregadas: {len(df)}")
 
     df_tech = filtrar_empresas_tech(df)
+
+    antes = len(df_tech)
+    df_tech = df_tech.drop_duplicates(subset=["cnpj", "cnae"])
+    print(f"Linhas duplicadas removidas: {antes - len(df_tech)}")
+
     print(f"Empresas com TI como atividade principal: {df_tech['cnpj'].nunique()}")
 
     df_tech["bairro_normalizado"] = normalizar_bairro(df_tech["nome_bairro"])
