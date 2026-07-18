@@ -13,7 +13,6 @@ interface HeroStatsData {
 
 export function HeroStats() {
   const [stats, setStats] = useState<HeroStatsData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,35 +22,37 @@ export function HeroStats() {
         return res.json();
       })
       .then((data: HeroStatsData) => setStats(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => setError(err.message));
   }, []);
 
-  if (loading) return <p>Carregando indicadores oficiais...</p>;
-  if (error) return <p>Erro: {error}</p>;
-  if (!stats) return null;
+  if (error) return <p className="lede">Erro ao carregar indicadores: {error}</p>;
+  if (!stats) return <p className="lede">Carregando indicadores oficiais...</p>;
 
-  const anosDeHistoria = new Date().getFullYear() - stats.ano_fundacao;
+  const anos = new Date().getFullYear() - stats.ano_fundacao;
 
   return (
-    <div>
-      <h2>Porto Digital — Números Oficiais</h2>
-      <p>{stats.empresas_embarcadas} empresas embarcadas</p>
-      <p>{stats.colaboradores.toLocaleString("pt-BR")} colaboradores</p>
-      <p>
-        {stats.faturamento_2025} de faturamento em 2025 (crescimento de{" "}
-        {stats.crescimento_faturamento_2025})
+    <>
+      <p className="section-label">Registro oficial</p>
+      <p className="lede">
+        Segundo o próprio Porto Digital, o ecossistema soma{" "}
+        <span className="data-figure">{stats.empresas_embarcadas}</span> empresas
+        embarcadas e{" "}
+        <span className="data-figure">{stats.colaboradores.toLocaleString("pt-BR")}</span>{" "}
+        colaboradores, responsáveis por{" "}
+        <span className="data-figure">{stats.faturamento_2025}</span> em faturamento
+        em 2025 — crescimento de{" "}
+        <span className="data-figure">{stats.crescimento_faturamento_2025}</span> em
+        relação ao ano anterior. O distrito ocupa{" "}
+        <span className="data-figure">{stats.territorio_hectares} hectares</span> no
+        centro do Recife há {anos} anos.
       </p>
-      <p>{anosDeHistoria} anos de história ({stats.territorio_hectares} hectares de território)</p>
-      <p>
-        <small>
-          Fonte:{" "}
-          <a href={stats.fonte_principal} target="_blank" rel="noreferrer">
-            Porto Digital
-          </a>{" "}
-          — verificado em {stats.data_verificacao}
-        </small>
+      <p className="footnote">
+        Fonte:{" "}
+        <a href={stats.fonte_principal} target="_blank" rel="noreferrer">
+          Porto Digital
+        </a>{" "}
+        — verificado em {stats.data_verificacao}
       </p>
-    </div>
+    </>
   );
 }

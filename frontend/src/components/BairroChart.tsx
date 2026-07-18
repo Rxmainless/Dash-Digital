@@ -16,7 +16,6 @@ interface BairroStat {
 
 export function BairroChart() {
   const [dados, setDados] = useState<BairroStat[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -26,25 +25,43 @@ export function BairroChart() {
         return res.json();
       })
       .then((data: BairroStat[]) => setDados(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => setError(err.message));
   }, []);
 
-  if (loading) return <p>Carregando gráfico...</p>;
-  if (error) return <p>Erro: {error}</p>;
+  if (error) return <p className="lede">Erro: {error}</p>;
+  if (dados.length === 0) return <p className="lede">Carregando gráfico...</p>;
 
   return (
-    <div>
-      <h2>Empresas de Tecnologia por Bairro (Polo Porto Digital)</h2>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={dados}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="bairro_normalizado" />
-          <YAxis allowDecimals={false} />
-          <Tooltip />
-          <Bar dataKey="total_empresas" fill="#6366f1" radius={[4, 4, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+    <>
+      <p className="section-label">Distribuição geográfica</p>
+      <div className="chart-panel">
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart data={dados}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis
+              dataKey="bairro_normalizado"
+              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 11 }}
+            />
+            <YAxis
+              allowDecimals={false}
+              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 11 }}
+            />
+            <Tooltip
+              contentStyle={{
+                background: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: 4,
+                fontFamily: "var(--font-mono)",
+                color: "var(--ink)",
+              }}
+            />
+            <Bar dataKey="total_empresas" fill="var(--accent-primary)" radius={[3, 3, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <p className="chart-caption">
+        Empresas de tecnologia por bairro, dentro da área do polo Porto Digital.
+      </p>
+    </>
   );
 }

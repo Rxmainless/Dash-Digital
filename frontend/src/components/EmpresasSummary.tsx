@@ -2,16 +2,11 @@ import { useEffect, useState } from "react";
 
 interface Empresa {
   cnpj: string;
-  razao_social: string;
-  nome_fantasia: string | null;
-  nome_bairro: string;
-  desc_atividade: string;
   esta_no_polo_porto_digital: boolean;
 }
 
 export function EmpresasSummary() {
   const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,20 +16,26 @@ export function EmpresasSummary() {
         return res.json();
       })
       .then((data: Empresa[]) => setEmpresas(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+      .catch((err) => setError(err.message));
   }, []);
 
-  if (loading) return <p>Carregando dados...</p>;
-  if (error) return <p>Erro: {error}</p>;
+  if (error) return <p className="lede">Erro ao carregar dados: {error}</p>;
+  if (empresas.length === 0) return <p className="lede">Carregando levantamento de campo...</p>;
 
   const noPolo = empresas.filter((e) => e.esta_no_polo_porto_digital).length;
 
   return (
-    <div>
-      <h2>Empresas de Tecnologia no Recife</h2>
-      <p>Total no dataset filtrado: {empresas.length}</p>
-      <p>Fisicamente na região do Porto Digital: {noPolo}</p>
-    </div>
+    <>
+      <p className="section-label">Levantamento de campo</p>
+      <p className="lede">
+        Cruzando esse retrato oficial com os dados públicos da Prefeitura do Recife,
+        mapeamos <span className="data-figure">{empresas.length.toLocaleString("pt-BR")}</span>{" "}
+        empresas ativas na cidade cuja atividade principal é tecnologia. Restringindo à
+        área geográfica do polo, esse número cai para{" "}
+        <span className="data-figure">{noPolo}</span> — quase o dobro das empresas
+        oficialmente embarcadas, sinal de que o ecossistema tecnológico do Recife
+        transborda os limites administrativos do Porto Digital.
+      </p>
+    </>
   );
 }
