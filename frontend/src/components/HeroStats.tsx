@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatedNumber } from "./AnimatedNumber";
 
 interface HeroStatsData {
   fonte_principal: string;
@@ -35,16 +36,14 @@ export function HeroStats() {
       <p className="section-label">Registro oficial</p>
       <p className="lede">
         Segundo o próprio Porto Digital, o ecossistema soma{" "}
-        <span className="data-figure">{stats.empresas_embarcadas}</span> empresas
-        embarcadas e{" "}
-        <span className="data-figure">{stats.colaboradores.toLocaleString("pt-BR")}</span>{" "}
-        colaboradores, responsáveis por{" "}
-        <span className="data-figure">{stats.faturamento_2025}</span> em faturamento
-        em 2025 — crescimento de{" "}
-        <span className="data-figure">{stats.crescimento_faturamento_2025}</span> em
-        relação ao ano anterior. O distrito ocupa{" "}
-        <span className="data-figure">{stats.territorio_hectares} hectares</span> no
-        centro do Recife há {anos} anos.
+        <AnimatedNumber value={stats.empresas_embarcadas} /> empresas embarcadas e{" "}
+        <AnimatedNumber value={stats.colaboradores} /> colaboradores, responsáveis
+        por <span className="data-figure">{stats.faturamento_2025}</span> em
+        faturamento em 2025 — crescimento de{" "}
+        <span className="data-figure">{stats.crescimento_faturamento_2025}</span>{" "}
+        em relação ao ano anterior. O distrito ocupa{" "}
+        <AnimatedNumber value={stats.territorio_hectares} /> hectares no centro do
+        Recife há <AnimatedNumber value={anos} /> anos.
       </p>
       <p className="footnote">
         Fonte:{" "}

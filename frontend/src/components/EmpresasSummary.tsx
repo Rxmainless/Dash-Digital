@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatedNumber } from "./AnimatedNumber";
 
 interface Empresa {
   cnpj: string;
@@ -29,12 +30,11 @@ export function EmpresasSummary() {
       <p className="section-label">Levantamento de campo</p>
       <p className="lede">
         Cruzando esse retrato oficial com os dados públicos da Prefeitura do Recife,
-        mapeamos <span className="data-figure">{empresas.length.toLocaleString("pt-BR")}</span>{" "}
-        empresas ativas na cidade cuja atividade principal é tecnologia. Restringindo à
-        área geográfica do polo, esse número cai para{" "}
-        <span className="data-figure">{noPolo}</span> — quase o dobro das empresas
-        oficialmente embarcadas, sinal de que o ecossistema tecnológico do Recife
-        transborda os limites administrativos do Porto Digital.
+        mapeamos <AnimatedNumber value={empresas.length} /> empresas ativas na cidade
+        cuja atividade principal é tecnologia. Restringindo à área geográfica do polo,
+        esse número cai para <AnimatedNumber value={noPolo} /> — quase o dobro das
+        empresas oficialmente embarcadas, sinal de que o ecossistema tecnológico do
+        Recife transborda os limites administrativos do Porto Digital.
       </p>
     </>
   );
