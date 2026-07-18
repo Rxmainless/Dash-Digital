@@ -70,9 +70,23 @@ def main():
 
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     output_path = PROCESSED_DIR / "empresas_tech.json"
+        
+    df_polo = df_tech[df_tech["esta_no_polo_porto_digital"]]
+    contagem_por_bairro = (
+        df_polo.groupby("bairro_normalizado")["cnpj"]
+        .nunique()
+        .sort_values(ascending=False)
+        .reset_index(name="total_empresas")
+    )
+
+    stats_path = PROCESSED_DIR / "stats_por_bairro.json"
+    contagem_por_bairro.to_json(stats_path, orient="records", force_ascii=False, indent=2)
+    print(f"Estatísticas por bairro salvas em {stats_path}")
 
     df_tech.to_json(output_path, orient="records", force_ascii=False, indent=2)
     print(f"Salvo em {output_path}")
+    
+    
 
 if __name__ == "__main__":
     main()
