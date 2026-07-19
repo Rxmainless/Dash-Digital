@@ -2,8 +2,13 @@ import { useEffect, useRef, useState } from "react";
 
 interface AnimatedNumberProps {
   value: number;
-  duration?: number; // em ms
+  duration?: number;
   formatOptions?: Intl.NumberFormatOptions;
+}
+
+function getPrefersReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
 export function AnimatedNumber({
@@ -11,19 +16,15 @@ export function AnimatedNumber({
   duration = 1800,
   formatOptions,
 }: AnimatedNumberProps) {
-  const [display, setDisplay] = useState(0);
+
+  const [display, setDisplay] = useState(() =>
+    getPrefersReducedMotion() ? value : 0
+  );
   const spanRef = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
-      setDisplay(value);
-      return;
-    }
+    if (getPrefersReducedMotion()) return;
 
     const el = spanRef.current;
     if (!el) return;
@@ -46,7 +47,6 @@ export function AnimatedNumber({
       function tick(now: number) {
         const elapsed = now - start;
         const progress = Math.min(elapsed / duration, 1);
-        // easeOutExpo: acelera rápido, desacelera suave no fim
         const eased = 1 - Math.pow(1 - progress, 3);
         setDisplay(Math.round(eased * value));
 
