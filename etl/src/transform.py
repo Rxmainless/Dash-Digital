@@ -1,6 +1,5 @@
 import pandas as pd
 from pathlib import Path
-import json
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
@@ -48,45 +47,57 @@ def filtrar_empresas_tech(df: pd.DataFrame) -> pd.DataFrame:
     return df.loc[filtro].copy()
 
 
-def main():
-    df = load_latest_raw()
-    print(f"Total de linhas carregadas: {len(df)}")
+def remover_duplicatas(df: pd.DataFrame) -> pd.DataFrame:
+    antes = len(df)
+    df_limpo = df.drop_duplicates(subset=["cnpj", "cnae"])
+    print(f"Linhas duplicadas removidas: {antes - len(df_limpo)}")
+    return df_limpo
 
-    df_tech = filtrar_empresas_tech(df)
 
-    antes = len(df_tech)
-    df_tech = df_tech.drop_duplicates(subset=["cnpj", "cnae"])
-    print(f"Linhas duplicadas removidas: {antes - len(df_tech)}")
-
-    print(f"Empresas com TI como atividade principal: {df_tech['cnpj'].nunique()}")
-
-    df_tech["bairro_normalizado"] = normalizar_bairro(df_tech["nome_bairro"])
-    df_tech["esta_no_polo_porto_digital"] = df_tech["bairro_normalizado"].isin(
+def marcar_polo_porto_digital(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df["bairro_normalizado"] = normalizar_bairro(df["nome_bairro"])
+    df["esta_no_polo_porto_digital"] = df["bairro_normalizado"].isin(
         BAIRROS_PORTO_DIGITAL
     )
+    return df
 
-    no_polo = df_tech[df_tech["esta_no_polo_porto_digital"]]["cnpj"].nunique()
-    print(f"Dessas, fisicamente nos bairros do Porto Digital: {no_polo}")
 
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
-    output_path = PROCESSED_DIR / "empresas_tech.json"
-        
-    df_polo = df_tech[df_tech["esta_no_polo_porto_digital"]]
-    contagem_por_bairro = (
+def agregar_por_bairro(df: pd.DataFrame) -> pd.DataFrame:
+    df_polo = df[df["esta_no_polo_porto_digital"]]
+    return (
         df_polo.groupby("bairro_normalizado")["cnpj"]
         .nunique()
         .sort_values(ascending=False)
         .reset_index(name="total_empresas")
     )
 
-    stats_path = PROCESSED_DIR / "stats_por_bairro.json"
-    contagem_por_bairro.to_json(stats_path, orient="records", force_ascii=False, indent=2)
-    print(f"Estatísticas por bairro salvas em {stats_path}")
 
-    df_tech.to_json(output_path, orient="records", force_ascii=False, indent=2)
+def salvar_json(df: pd.DataFrame, filename: str) -> Path:
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = PROCESSED_DIR / filename
+    df.to_json(output_path, orient="records", force_ascii=False, indent=2)
     print(f"Salvo em {output_path}")
-    
-    
+    return output_path
+
+
+def main() -> None:
+    df_raw = load_latest_raw()
+    print(f"Total de linhas carregadas: {len(df_raw)}")
+
+    df_tech = filtrar_empresas_tech(df_raw)
+    df_tech = remover_duplicatas(df_tech)
+    print(f"Empresas com TI como atividade principal: {df_tech['cnpj'].nunique()}")
+
+    df_tech = marcar_polo_porto_digital(df_tech)
+    no_polo = df_tech[df_tech["esta_no_polo_porto_digital"]]["cnpj"].nunique()
+    print(f"Dessas, fisicamente nos bairros do Porto Digital: {no_polo}")
+
+    stats_bairro = agregar_por_bairro(df_tech)
+
+    salvar_json(df_tech, "empresas_tech.json")
+    salvar_json(stats_bairro, "stats_por_bairro.json")
+
 
 if __name__ == "__main__":
     main()
