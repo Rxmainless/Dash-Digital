@@ -9,29 +9,12 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Mudar para tema claro" : "Mudar para tema escuro"}
       aria-pressed={isDark}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.6rem",
-        padding: "0.4rem 0.9rem",
-        borderRadius: "999px",
-        border: `1px solid var(--border)`,
-        background: "var(--surface)",
-        color: "var(--ink)",
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.8rem",
-        cursor: "pointer",
-      }}
+      className="theme-toggle"
     >
       <span
-        style={{
-          width: "10px",
-          height: "10px",
-          borderRadius: "50%",
-          background: isDark ? "var(--accent-primary)" : "var(--accent-warm)",
-          boxShadow: isDark ? "0 0 6px var(--accent-primary)" : "0 0 6px var(--accent-warm)",
-          transition: "background 0.3s ease",
-        }}
+        className={`theme-toggle__dot ${
+          isDark ? "theme-toggle__dot--dark" : "theme-toggle__dot--light"
+        }`}
       />
       {isDark ? "MODO NOTURNO" : "MODO DIURNO"}
     </button>

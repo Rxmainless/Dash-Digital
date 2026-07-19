@@ -1,8 +1,3 @@
-"""
-Testes de caracterização para transform.py — baseados em casos reais
-encontrados no dataset de empresas do Recife (não são casos inventados).
-"""
-
 import pandas as pd
 import sys
 from pathlib import Path
