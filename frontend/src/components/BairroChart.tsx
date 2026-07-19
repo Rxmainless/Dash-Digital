@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -8,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useFetchJSON } from "../hooks/useFetchJSON";
 
 interface BairroStat {
   bairro_normalizado: string;
@@ -15,21 +15,10 @@ interface BairroStat {
 }
 
 export function BairroChart() {
-  const [dados, setDados] = useState<BairroStat[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/data/stats_por_bairro.json")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Erro ao carregar dados: ${res.status}`);
-        return res.json();
-      })
-      .then((data: BairroStat[]) => setDados(data))
-      .catch((err) => setError(err.message));
-  }, []);
+  const { data: dados, error } = useFetchJSON<BairroStat[]>("/data/stats_por_bairro.json");
 
   if (error) return <p className="lede">Erro: {error}</p>;
-  if (dados.length === 0) return <p className="lede">Carregando gráfico...</p>;
+  if (!dados) return <p className="lede">Carregando gráfico...</p>;
 
   return (
     <>

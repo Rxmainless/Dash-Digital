@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useFetchJSON } from "../hooks/useFetchJSON";
 import { AnimatedNumber } from "./AnimatedNumber";
 
 interface HeroStatsData {
@@ -13,18 +13,7 @@ interface HeroStatsData {
 }
 
 export function HeroStats() {
-  const [stats, setStats] = useState<HeroStatsData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/data/hero_stats.json")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Erro ao carregar dados: ${res.status}`);
-        return res.json();
-      })
-      .then((data: HeroStatsData) => setStats(data))
-      .catch((err) => setError(err.message));
-  }, []);
+  const { data: stats, error } = useFetchJSON<HeroStatsData>("/data/hero_stats.json");
 
   if (error) return <p className="lede">Erro ao carregar indicadores: {error}</p>;
   if (!stats) return <p className="lede">Carregando indicadores oficiais...</p>;

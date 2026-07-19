@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useFetchJSON } from "../hooks/useFetchJSON";
 import { AnimatedNumber } from "./AnimatedNumber";
 
 interface Empresa {
@@ -7,21 +7,10 @@ interface Empresa {
 }
 
 export function EmpresasSummary() {
-  const [empresas, setEmpresas] = useState<Empresa[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/data/empresas_tech.json")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Erro ao carregar dados: ${res.status}`);
-        return res.json();
-      })
-      .then((data: Empresa[]) => setEmpresas(data))
-      .catch((err) => setError(err.message));
-  }, []);
+  const { data: empresas, error } = useFetchJSON<Empresa[]>("/data/empresas_tech.json");
 
   if (error) return <p className="lede">Erro ao carregar dados: {error}</p>;
-  if (empresas.length === 0) return <p className="lede">Carregando levantamento de campo...</p>;
+  if (!empresas) return <p className="lede">Carregando levantamento de campo...</p>;
 
   const noPolo = empresas.filter((e) => e.esta_no_polo_porto_digital).length;
 
