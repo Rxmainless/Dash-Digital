@@ -38,23 +38,29 @@ Todos os números institucionais citados foram cruzados com múltiplas fontes in
 - **Dados:** JSON estático, gerado pelo pipeline e servido pelo frontend (sem backend/banco de dados)
 
 ## Estrutura do projeto
+```bash
 porto-digital-dashboard/
-├── etl/                    # Pipeline de dados em Python
+├── etl/                          # Pipeline de dados em Python
 │   ├── src/
-│   │   ├── extract.py      # Baixa o dataset bruto do CKAN
-│   │   ├── transform.py    # Filtra, limpa e agrega os dados
-│   │   └── pipeline.py     # Orquestra extract → transform → sync
-│   └── tests/              # Testes de caracterização (casos reais encontrados)
+│   │   ├── extract.py            # Baixa o dataset bruto do CKAN
+│   │   ├── transform.py          # Filtra, limpa e agrega os dados
+│   │   └── pipeline.py           # Orquestra: extract → transform → sync
+│   └── tests/                    # Testes de caracterização (casos reais encontrados)
+│
 ├── data/
-│   ├── raw/                # Snapshots brutos (não versionado)
-│   └── processed/          # JSONs processados (fonte da verdade)
-├── frontend/                # React + TypeScript
+│   ├── raw/                      # Snapshots brutos (não versionados no git)
+│   └── processed/                # JSONs processados (fonte da verdade)
+│
+├── frontend/                     # React + TypeScript
 │   └── src/
 │       ├── components/
 │       ├── hooks/
-│       └── theme/           # Sistema de tema claro/escuro
-└── docs/
-└── architecture.md      # Decisões de design e limitações conhecidas
+│       └── theme/                # Sistema de tema claro/escuro
+│
+├── docs/
+│   └── architecture.md           # Decisões de design e limitações conhecidas
+│
+└── README.md
 
 ## Como rodar localmente
 

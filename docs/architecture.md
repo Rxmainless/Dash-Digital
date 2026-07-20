@@ -63,6 +63,21 @@ O arquivo inclui os campos `fonte_principal` e `data_verificacao` justamente par
 
 ---
 
+## 3.1. Diretório de empresas embarcadas — segunda fonte, limitações conhecidas
+
+Além do dataset da Prefeitura (empresas de tecnologia por CNAE/bairro), o projeto também consome o diretório oficial de empresas embarcadas do Porto Digital, via um endpoint público (Supabase/PostgREST) descoberto por inspeção de rede em `embarcadas.portodigital.org` — não é uma API documentada oficialmente, mas é a mesma chamada que a própria página pública faz para qualquer visitante, usando uma chave "anon" pública do Supabase (não é credencial secreta).
+
+**Divergência não resolvida:** esse diretório retorna **398 empresas**, predominantemente classificadas como `company_type: "Startup"` (381 de 398, ou 95,7%). Isso não bate com o número oficial de **541 empresas embarcadas** divulgado pelo Porto Digital (ver seção 3, `hero_stats.json`).
+
+A causa exata dessa diferença **não foi determinada**. Hipóteses consideradas, nenhuma confirmada:
+- O diretório público pode priorizar/filtrar por "startups", sub-representando outras categorias de empresa embarcada (ex: âncoras corporativas maiores, que poderiam estar em outra view não descoberta)
+- Desatualização entre as duas fontes (o hero_stats reflete um release de resultados; o diretório pode ter cadência de atualização diferente)
+- A view consultada pode ter algum filtro adicional não identificado na inspeção de rede
+
+**Tratamento adotado:** os 398 registros são tratados como "diretório de startups/empresas do Porto Digital disponível publicamente", não como sinônimo de "todas as 541 empresas embarcadas". O dashboard não deve apresentar esse número como equivalente ao número oficial — ver `EmbarcadasSummary` (ou componente equivalente) para o texto exato usado.
+
+---
+
 ## 4. Becos sem saída (documentados para não serem repetidos)
 
 - **`embarcadas.portodigital.org`** é uma SPA (aplicação client-side) — o HTML vem vazio, os dados reais vêm de uma API JavaScript interna não documentada. Não foi usado como fonte por essa fragilidade.
