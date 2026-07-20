@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 import sys
 from pathlib import Path
 
@@ -10,6 +11,7 @@ from transform import (
     marcar_polo_porto_digital,
     agregar_por_bairro,
     remover_duplicatas,
+    validar_schema,
 )
 
 
@@ -85,3 +87,23 @@ def test_remover_duplicatas_preserva_atividades_diferentes():
     })
     resultado = remover_duplicatas(df)
     assert len(resultado) == 2
+
+
+def test_validar_schema_aceita_colunas_corretas():
+    df = pd.DataFrame({
+        "cnpj": ["111"],
+        "cnae": ["6201500"],
+        "atividade_principal": ["S"],
+        "nome_bairro": ["Recife"],
+        "situacao_empresa": ["ATIVO"],
+    })
+    validar_schema(df)
+
+
+def test_validar_schema_rejeita_coluna_faltando():
+    df = pd.DataFrame({
+        "cnpj": ["111"],
+        "cnae": ["6201500"],
+    })
+    with pytest.raises(ValueError, match="Schema do dataset mudou"):
+        validar_schema(df)

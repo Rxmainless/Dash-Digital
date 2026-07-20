@@ -7,12 +7,15 @@ function App() {
   return (
     <div className="container-editorial">
       <header className="masthead">
-        <div>
-          <p className="eyebrow">Recife, PE · 8°03'S 34°52'W</p>
-          <h1>O ecossistema de tecnologia do Porto Digital</h1>
-          <p className="dek">Um levantamento cruzando dados oficiais e dados abertos da cidade.</p>
+        <div className="azulejo-band" aria-hidden="true" />
+        <div className="masthead-row">
+          <div>
+            <p className="eyebrow">Recife, PE · 8°03'S 34°52'W</p>
+            <h1>O ecossistema de tecnologia do Porto Digital</h1>
+            <p className="dek">Um levantamento cruzando dados oficiais e dados abertos da cidade.</p>
+          </div>
+          <ThemeToggle />
         </div>
-        <ThemeToggle />
       </header>
 
       <HeroStats />

@@ -14,6 +14,14 @@ BAIRROS_PORTO_DIGITAL = [
 
 CNAE_PREFIXES_TECH = ("62", "63")
 
+COLUNAS_OBRIGATORIAS = [
+    "cnpj",
+    "cnae",
+    "atividade_principal",
+    "nome_bairro",
+    "situacao_empresa",
+]
+
 
 def load_latest_raw() -> pd.DataFrame:
     csv_files = sorted(RAW_DIR.glob("empresas_recife_*.csv"))
@@ -25,6 +33,15 @@ def load_latest_raw() -> pd.DataFrame:
     print(f"Carregando {latest.name}...")
 
     return pd.read_csv(latest, sep=";", dtype=str, encoding="utf-8")
+
+
+def validar_schema(df: pd.DataFrame) -> None:
+    faltando = [col for col in COLUNAS_OBRIGATORIAS if col not in df.columns]
+    if faltando:
+        raise ValueError(
+            f"Schema do dataset mudou. Colunas esperadas e ausentes: {faltando}. "
+            f"Colunas disponíveis no CSV: {list(df.columns)}"
+        )
 
 
 def normalizar_bairro(series: pd.Series) -> pd.Series:
@@ -84,6 +101,8 @@ def salvar_json(df: pd.DataFrame, filename: str) -> Path:
 def main() -> None:
     df_raw = load_latest_raw()
     print(f"Total de linhas carregadas: {len(df_raw)}")
+
+    validar_schema(df_raw)
 
     df_tech = filtrar_empresas_tech(df_raw)
     df_tech = remover_duplicatas(df_tech)

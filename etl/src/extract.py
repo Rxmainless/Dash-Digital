@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import date
 
 CKAN_BASE_URL = "https://dados.recife.pe.gov.br/api/3"
-RESOURCE_ID = "6d5e72aa-3f4b-4dc3-817c-0e0305cef538" 
+RESOURCE_ID = "6d5e72aa-3f4b-4dc3-817c-0e0305cef538"  
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
@@ -36,14 +36,35 @@ def download_csv(url: str, destination: Path) -> None:
 
 def main():
     print("Consultando URL atual do recurso no CKAN...")
-    csv_url = get_resource_download_url(RESOURCE_ID)
+    try:
+        csv_url = get_resource_download_url(RESOURCE_ID)
+    except requests.exceptions.Timeout:
+        raise RuntimeError(
+            "Timeout ao consultar a API do CKAN. O portal dados.recife.pe.gov.br "
+            "pode estar fora do ar ou lento. Tente novamente mais tarde."
+        )
+    except requests.exceptions.ConnectionError:
+        raise RuntimeError(
+            "Não foi possível conectar a dados.recife.pe.gov.br. "
+            "Verifique sua conexão ou se o portal está no ar."
+        )
+    except requests.exceptions.HTTPError as e:
+        raise RuntimeError(
+            f"CKAN respondeu com erro HTTP: {e}. "
+            f"O recurso {RESOURCE_ID} pode ter sido removido ou renomeado."
+        )
+
     print(f"URL encontrada: {csv_url}")
 
     today = date.today().isoformat()
     destination = RAW_DIR / f"empresas_recife_{today}.csv"
 
     print(f"Baixando para {destination}...")
-    download_csv(csv_url, destination)
+    try:
+        download_csv(csv_url, destination)
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"Falha ao baixar o CSV: {e}")
+
     print("Download concluído.")
 
 
