@@ -2,7 +2,9 @@ import shutil
 from pathlib import Path
 
 import extract
+import extract_embarcadas
 import transform
+import transform_embarcadas
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -12,6 +14,8 @@ FILES_TO_SYNC = [
     "empresas_tech.json",
     "stats_por_bairro.json",
     "hero_stats.json",
+    "embarcadas.json",
+    "stats_por_area.json",
 ]
 
 
@@ -30,13 +34,19 @@ def sync_to_frontend() -> None:
 
 
 def main() -> None:
-    print("=== 1/3: Extraindo dados ===")
+    print("=== 1/5: Extraindo dados de empresas (Prefeitura) ===")
     extract.main()
 
-    print("\n=== 2/3: Transformando dados ===")
+    print("\n=== 2/5: Extraindo dados de embarcadas (Porto Digital) ===")
+    extract_embarcadas.main()
+
+    print("\n=== 3/5: Transformando dados de empresas ===")
     transform.main()
 
-    print("\n=== 3/3: Sincronizando com o frontend ===")
+    print("\n=== 4/5: Transformando dados de embarcadas ===")
+    transform_embarcadas.main()
+
+    print("\n=== 5/5: Sincronizando com o frontend ===")
     sync_to_frontend()
 
     print("\nPipeline concluído.")
