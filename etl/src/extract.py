@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import date
 
 CKAN_BASE_URL = "https://dados.recife.pe.gov.br/api/3"
-RESOURCE_ID = "6d5e72aa-3f4b-4dc3-817c-0e0305cef538"  
+RESOURCE_ID = "6d5e72aa-3f4b-4dc3-817c-0e0305cef538"  # Empresas Ativas do Recife
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
@@ -32,6 +32,15 @@ def download_csv(url: str, destination: Path) -> None:
         with open(destination, "wb") as f:
             for chunk in resp.iter_content(chunk_size=8192):
                 f.write(chunk)
+
+
+def limpar_snapshots_antigos(padrao: str, manter: int = 3) -> None:
+    arquivos = sorted(RAW_DIR.glob(padrao))
+    excedentes = arquivos[:-manter] if len(arquivos) > manter else []
+
+    for arquivo in excedentes:
+        arquivo.unlink()
+        print(f"  Removido snapshot antigo: {arquivo.name}")
 
 
 def main():
@@ -66,6 +75,8 @@ def main():
         raise RuntimeError(f"Falha ao baixar o CSV: {e}")
 
     print("Download concluído.")
+
+    limpar_snapshots_antigos("empresas_recife_*.csv")
 
 
 if __name__ == "__main__":

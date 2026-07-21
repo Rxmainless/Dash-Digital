@@ -48,12 +48,22 @@ def fetch_all_embarcadas(page_size: int = 500) -> list[dict]:
             print(f"  Baixadas {len(all_records)} de {total} empresas...")
         else:
             print(f"  Baixadas {len(all_records)} empresas (total desconhecido)...")
+
         if (total is not None and len(all_records) >= total) or len(batch) < page_size:
             break
 
         offset += page_size
 
     return all_records
+
+
+def limpar_snapshots_antigos(padrao: str, manter: int = 3) -> None:
+    arquivos = sorted(RAW_DIR.glob(padrao))
+    excedentes = arquivos[:-manter] if len(arquivos) > manter else []
+
+    for arquivo in excedentes:
+        arquivo.unlink()
+        print(f"  Removido snapshot antigo: {arquivo.name}")
 
 
 def main():
@@ -68,6 +78,8 @@ def main():
         json.dump(records, f, ensure_ascii=False, indent=2)
 
     print(f"Salvo em {destination} ({len(records)} empresas)")
+
+    limpar_snapshots_antigos("embarcadas_*.json")
 
 
 if __name__ == "__main__":
