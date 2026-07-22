@@ -2,6 +2,7 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { HeroStats } from "./components/HeroStats";
 import { EmpresasSummary } from "./components/EmpresasSummary";
 import { BairroChart } from "./components/BairroChart";
+import { EmbarcadasSummary } from "./components/EmbarcadasSummary";
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
 
       <EmpresasSummary />
       <BairroChart />
+
+      <EmbarcadasSummary />
     </div>
   );
 }
