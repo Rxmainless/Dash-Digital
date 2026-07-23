@@ -2,7 +2,8 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { HeroStats } from "./components/HeroStats";
 import { EmpresasSummary } from "./components/EmpresasSummary";
 import { BairroChart } from "./components/BairroChart";
-import { EmbarcadasSummary } from "./components/EmbarcadasSummary";
+import { AreaChart } from "./components/AreaChart";
+import { EmbarcadasDirectory } from "./components/EmbarcadasDirectory";
 
 function App() {
   return (
@@ -26,7 +27,19 @@ function App() {
       <EmpresasSummary />
       <BairroChart />
 
-      <EmbarcadasSummary />
+      <hr className="section-divider" />
+
+      <p className="section-label">Diretório de startups embarcadas</p>
+      <p className="lede">
+        O Porto Digital também mantém um diretório público de startups embarcadas —
+        398 registros no momento da última atualização, a maioria (95,7%) classificada
+        como "Startup". Esse número é menor que o total oficial de 541 empresas
+        embarcadas: a diferença provavelmente reflete que esse diretório prioriza
+        startups sobre outras categorias de empresa conveniada, mas a causa exata não
+        foi confirmada.
+      </p>
+      <AreaChart />
+      <EmbarcadasDirectory />
     </div>
   );
 }
