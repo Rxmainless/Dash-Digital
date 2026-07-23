@@ -21,19 +21,19 @@ export function BairroChart() {
   if (!dados) return <p className="lede">Carregando gráfico...</p>;
 
   return (
-    <>
-      <p className="section-label">Distribuição geográfica</p>
+    <div>
+      <p className="chart-mini-label">Por bairro</p>
       <div className="chart-panel">
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={240}>
           <BarChart data={dados}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="bairro_normalizado"
-              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 11 }}
+              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 10.5 }}
             />
             <YAxis
               allowDecimals={false}
-              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 11 }}
+              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 10.5 }}
             />
             <Tooltip
               contentStyle={{
@@ -48,9 +48,7 @@ export function BairroChart() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="chart-caption">
-        Empresas de tecnologia por bairro, dentro da área do polo Porto Digital.
-      </p>
-    </>
+      <p className="chart-caption">Empresas de tecnologia por bairro no polo.</p>
+    </div>
   );
 }
