@@ -34,13 +34,6 @@ export function HeroStats() {
         <AnimatedNumber value={stats.territorio_hectares} /> hectares no centro do
         Recife há <AnimatedNumber value={anos} /> anos.
       </p>
-      <p className="footnote">
-        Fonte:{" "}
-        <a href={stats.fonte_principal} target="_blank" rel="noreferrer">
-          Porto Digital
-        </a>{" "}
-        — verificado em {stats.data_verificacao}
-      </p>
     </>
   );
 }

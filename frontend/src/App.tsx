@@ -5,6 +5,7 @@ import { BairroChart } from "./components/BairroChart";
 import { AreaChart } from "./components/AreaChart";
 import { EmbarcadasDirectory } from "./components/EmbarcadasDirectory";
 import { SectionNav } from "./components/SectionNav";
+import { PageFooter } from "./components/PageFooter";
 
 function App() {
   return (
@@ -54,12 +55,13 @@ function App() {
         <section id="diretorio" className="page-section">
           <p className="section-label">Diretório de startups embarcadas</p>
           <p className="lede">
-            Consulte as {" "}
-            <span className="data-figure">398</span> startups do diretório público,
-            buscando por nome ou filtrando por área de atuação.
+            Consulte as <span className="data-figure">398</span> startups do diretório
+            público, buscando por nome ou filtrando por área de atuação.
           </p>
           <EmbarcadasDirectory />
         </section>
+
+        <PageFooter />
       </div>
     </>
   );
