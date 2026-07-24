@@ -140,6 +140,11 @@ hr.section-divider {
   padding: var(--space-5);
 }
 
+.chart-panel--scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
 .chart-mini-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -163,6 +168,7 @@ hr.section-divider {
   grid-template-columns: 1fr;
   gap: var(--space-4);
   margin-bottom: var(--space-5);
+  align-items: start;
 }
 
 @media (min-width: 900px) {
@@ -171,10 +177,20 @@ hr.section-divider {
   }
 }
 
+/* ===== Tooltip do Recharts: força cor legível nos dois temas ===== */
+.recharts-tooltip-wrapper .recharts-tooltip-item,
+.recharts-tooltip-wrapper .recharts-tooltip-item-name,
+.recharts-tooltip-wrapper .recharts-tooltip-item-separator,
+.recharts-tooltip-wrapper .recharts-tooltip-item-value,
+.recharts-tooltip-wrapper .recharts-tooltip-label {
+  color: var(--ink) !important;
+}
+
 /* ===== Theme Toggle ===== */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.6rem;
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
@@ -184,6 +200,8 @@ hr.section-divider {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   cursor: pointer;
+  min-width: 13ch;
+  flex-shrink: 0;
   transition: border-color 0.2s ease, background-color 0.3s ease;
 }
 
@@ -214,12 +232,23 @@ hr.section-divider {
   margin-bottom: var(--space-6);
 }
 
+/* Ponto de corte FIXO, não mais decidido pixel a pixel pelo flex-wrap.
+   Abaixo de 640px, o toggle sempre empilha; acima, sempre fica ao lado
+   do título -- comportamento idêntico nos dois temas, sem depender do
+   comprimento do texto do botão. */
 .masthead-row {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-4);
-  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+@media (min-width: 640px) {
+  .masthead-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 }
 
 .azulejo-band {

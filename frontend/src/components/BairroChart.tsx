@@ -36,20 +36,23 @@ export function BairroChart() {
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               dataKey="bairro_normalizado"
-              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 10.5 }}
+              tick={{ fill: "var(--ink)", fontFamily: "var(--font-mono)", fontSize: 11.5 }}
             />
             <YAxis
               allowDecimals={false}
-              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 10.5 }}
+              tick={{ fill: "var(--ink)", fontFamily: "var(--font-mono)", fontSize: 11.5 }}
             />
             <Tooltip
+              cursor={{ fill: "var(--accent-primary-soft)" }}
               contentStyle={{
                 background: "var(--surface)",
                 border: "1px solid var(--border)",
                 borderRadius: 4,
                 fontFamily: "var(--font-mono)",
-                color: "var(--ink)",
+                fontSize: "0.85rem",
               }}
+              labelStyle={{ color: "var(--ink)", fontWeight: 500 }}
+              itemStyle={{ color: "var(--ink)" }}
             />
             <Bar
               dataKey="total_empresas"

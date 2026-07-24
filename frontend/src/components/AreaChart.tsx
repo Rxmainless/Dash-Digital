@@ -26,33 +26,37 @@ export function AreaChart() {
   const total = dados.reduce((soma, d) => soma + d.total_empresas, 0);
   const ativo = ativoIndex !== null ? dados[ativoIndex] : null;
   const percentual = ativo ? Math.round((ativo.total_empresas / total) * 100) : null;
+  const altura = dados.length * 26;
 
   return (
     <div>
       <p className="chart-mini-label">Por área de atuação</p>
-      <div className="chart-panel">
-        <ResponsiveContainer width="100%" height={240}>
-          <BarChart data={dados} layout="vertical" margin={{ left: 8 }}>
+      <div className="chart-panel chart-panel--scroll">
+        <ResponsiveContainer width="100%" height={altura}>
+          <BarChart data={dados} layout="vertical" margin={{ left: 8, right: 12 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" horizontal={false} />
             <XAxis
               type="number"
               allowDecimals={false}
-              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 10 }}
+              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 12 }}
             />
             <YAxis
               type="category"
               dataKey="primary_area"
-              width={130}
-              tick={{ fill: "var(--ink-muted)", fontFamily: "var(--font-mono)", fontSize: 9.5 }}
+              width={170}
+              tick={{ fill: "var(--ink)", fontFamily: "var(--font-mono)", fontSize: 11.5 }}
             />
             <Tooltip
+              cursor={{ fill: "var(--accent-primary-soft)" }}
               contentStyle={{
                 background: "var(--surface)",
                 border: "1px solid var(--border)",
                 borderRadius: 4,
                 fontFamily: "var(--font-mono)",
-                color: "var(--ink)",
+                fontSize: "0.85rem",
               }}
+              labelStyle={{ color: "var(--ink)", fontWeight: 500 }}
+              itemStyle={{ color: "var(--ink)" }}
             />
             <Bar
               dataKey="total_empresas"
