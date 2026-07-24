@@ -1,6 +1,8 @@
+import { useState } from "react";
 import {
   BarChart,
   Bar,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -16,9 +18,14 @@ interface BairroStat {
 
 export function BairroChart() {
   const { data: dados, error } = useFetchJSON<BairroStat[]>("/data/stats_por_bairro.json");
+  const [ativoIndex, setAtivoIndex] = useState<number | null>(null);
 
   if (error) return <p className="lede">Erro: {error}</p>;
   if (!dados) return <p className="lede">Carregando gráfico...</p>;
+
+  const total = dados.reduce((soma, d) => soma + d.total_empresas, 0);
+  const ativo = ativoIndex !== null ? dados[ativoIndex] : null;
+  const percentual = ativo ? Math.round((ativo.total_empresas / total) * 100) : null;
 
   return (
     <div>
@@ -44,11 +51,32 @@ export function BairroChart() {
                 color: "var(--ink)",
               }}
             />
-            <Bar dataKey="total_empresas" fill="var(--accent-primary)" radius={[3, 3, 0, 0]} />
+            <Bar
+              dataKey="total_empresas"
+              radius={[3, 3, 0, 0]}
+              onMouseEnter={(_, index) => setAtivoIndex(index)}
+              onMouseLeave={() => setAtivoIndex(null)}
+            >
+              {dados.map((_, index) => (
+                <Cell
+                  key={index}
+                  fill={index === ativoIndex ? "var(--accent-warm)" : "var(--accent-primary)"}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="chart-caption">Empresas de tecnologia por bairro no polo.</p>
+      <p className="chart-caption">
+        {ativo && percentual !== null ? (
+          <>
+            <strong>{ativo.bairro_normalizado}</strong> concentra{" "}
+            {ativo.total_empresas} empresas — {percentual}% do total no polo.
+          </>
+        ) : (
+          "Empresas de tecnologia por bairro no polo. Passe o mouse sobre uma barra."
+        )}
+      </p>
     </div>
   );
 }
