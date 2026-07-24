@@ -1,5 +1,6 @@
 import { useFetchJSON } from "../hooks/useFetchJSON";
 import { AnimatedNumber } from "./AnimatedNumber";
+import { Skeleton } from "./Skeleton";
 
 interface HeroStatsData {
   fonte_principal: string;
@@ -16,7 +17,18 @@ export function HeroStats() {
   const { data: stats, error } = useFetchJSON<HeroStatsData>("/data/hero_stats.json");
 
   if (error) return <p className="lede">Erro ao carregar indicadores: {error}</p>;
-  if (!stats) return <p className="lede">Carregando indicadores oficiais...</p>;
+  if (!stats) {
+  return (
+    <>
+      <p className="section-label">Registro oficial</p>
+      <div className="skeleton-lines">
+        <Skeleton height="1.4rem" width="90%" />
+        <Skeleton height="1.4rem" width="75%" />
+        <Skeleton height="1.4rem" width="60%" />
+      </div>
+    </>
+  );
+}
 
   const anos = new Date().getFullYear() - stats.ano_fundacao;
 
