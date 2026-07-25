@@ -6,6 +6,44 @@ import { AreaChart } from "./components/AreaChart";
 import { EmbarcadasDirectory } from "./components/EmbarcadasDirectory";
 import { SectionNav } from "./components/SectionNav";
 import { PageFooter } from "./components/PageFooter";
+import { AnimatedNumber } from "./components/AnimatedNumber";
+import { Skeleton } from "./components/Skeleton";
+import { useFetchJSON } from "./hooks/useFetchJSON";
+
+interface Embarcada {
+  id: number;
+  company_type: string;
+}
+
+function DiretorioIntro() {
+  const { data: embarcadas, error } = useFetchJSON<Embarcada[]>("/data/embarcadas.json");
+
+  if (error) return <p className="lede">Erro ao carregar dados: {error}</p>;
+
+  if (!embarcadas) {
+    return (
+      <div className="skeleton-lines">
+        <Skeleton height="1.4rem" width="90%" />
+        <Skeleton height="1.4rem" width="60%" />
+      </div>
+    );
+  }
+
+  const total = embarcadas.length;
+  const startups = embarcadas.filter((e) => e.company_type === "Startup").length;
+  const percentualStartup = Math.round((startups / total) * 100);
+
+  return (
+    <p className="lede">
+      O Porto Digital também mantém um diretório público de startups embarcadas —{" "}
+      <AnimatedNumber value={total} /> registros na última atualização, a maioria (
+      {percentualStartup}%) classificada como "Startup". Esse número é menor que o
+      total oficial de 541 empresas embarcadas: a diferença provavelmente reflete
+      que esse diretório prioriza startups sobre outras categorias de empresa
+      conveniada, mas a causa exata não foi confirmada.
+    </p>
+  );
+}
 
 function App() {
   return (
@@ -35,14 +73,7 @@ function App() {
         <section id="levantamento-campo" className="page-section">
           <EmpresasSummary />
 
-          <p className="lede">
-            O Porto Digital também mantém um diretório público de startups embarcadas —
-            398 registros na última atualização, a maioria (95,7%) classificada como
-            "Startup". Esse número é menor que o total oficial de 541 empresas
-            embarcadas: a diferença provavelmente reflete que esse diretório prioriza
-            startups sobre outras categorias de empresa conveniada, mas a causa exata
-            não foi confirmada.
-          </p>
+          <DiretorioIntro />
 
           <div className="charts-grid">
             <BairroChart />
@@ -54,10 +85,6 @@ function App() {
 
         <section id="diretorio" className="page-section">
           <p className="section-label">Diretório de startups embarcadas</p>
-          <p className="lede">
-            Consulte as <span className="data-figure">398</span> startups do diretório
-            público, buscando por nome ou filtrando por área de atuação.
-          </p>
           <EmbarcadasDirectory />
         </section>
 

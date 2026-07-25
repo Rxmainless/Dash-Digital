@@ -1,5 +1,7 @@
 # Porto Digital — Dashboard do Ecossistema
 
+**[🔗 Ver o projeto ao vivo](https://dash-digital.pages.dev/)**
+
 Um levantamento de dados que cruza os números oficiais do Porto Digital com dados abertos da Prefeitura do Recife e o diretório público de startups embarcadas, pra entender melhor o tamanho real do ecossistema de tecnologia da cidade.
 
 > Projeto de portfólio pessoal — construído para o [Porto Digital](https://www.portodigital.org), o distrito de inovação de Recife/PE.
@@ -44,6 +46,7 @@ Todos os números institucionais citados foram cruzados com múltiplas fontes in
 - **Frontend:** React 19 · TypeScript · Vite · Recharts
 - **Dados:** JSON estático, gerado pelo pipeline e servido pelo frontend (sem backend/banco de dados)
 - **CI/CD:** GitHub Actions (lint + testes a cada push, atualização semanal automática dos dados)
+- **Hospedagem:** [Cloudflare Pages](https://pages.cloudflare.com) (deploy automático a cada push na `main`)
 
 ## Estrutura do projeto
 
@@ -106,9 +109,16 @@ npm install
 npm run dev
 ```
 
+### Build de produção (o mesmo que a Cloudflare roda)
+```bash
+cd frontend
+npm run build     # gera frontend/dist
+npm run preview   # serve o build localmente para testar antes de publicar
+```
+
 ## Decisões de design
 
-O projeto usa uma identidade visual própria — tema claro ("Relatório") e escuro ("Sala de Controle"), com tratamento editorial dos dados em vez de um dashboard genérico de KPIs. As decisões completas de paleta, tipografia e motivo visual estão documentadas em [`docs/architecture.md`](docs/architecture.md).
+O projeto usa uma identidade visual própria — tema claro ("Relatório") e escuro ("Sala de Controle"), com tratamento editorial dos dados em vez de um dashboard genérico de KPIs. Inclui estados de carregamento com skeleton (em vez de spinner ou texto genérico), indicadores de foco visíveis para navegação por teclado, e gráficos que reagem ao hover atualizando o texto ao redor. As decisões completas de paleta, tipografia e motivo visual estão documentadas em [`docs/architecture.md`](docs/architecture.md).
 
 ## Limitações conhecidas
 
@@ -118,9 +128,12 @@ O projeto usa uma identidade visual própria — tema claro ("Relatório") e esc
 
 ## Roadmap
 
-- [ ] Interação gráfico ↔ texto (hover destaca o parágrafo correspondente)
+- [x] Interação gráfico ↔ texto (hover destaca a legenda com o dado específico)
+- [x] Estados de carregamento com skeleton
+- [x] Acessibilidade: navegação por teclado e indicadores de foco
+- [x] Deploy em produção
 - [ ] Vagas por área como terceira fonte de dado
-- [ ] Deploy em produção
+- [ ] Scroll-reveal nas seções (polish visual)
 
 ## Licença
 

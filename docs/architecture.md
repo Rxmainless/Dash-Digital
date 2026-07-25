@@ -9,22 +9,20 @@ Este documento existe para que decisões tomadas ao longo do desenvolvimento nã
 ### Por que ETL local gerando JSON estático, e não uma API/backend?
 
 O projeto não precisa de dados em tempo real — o dataset de origem (Prefeitura do Recife) atualiza mensalmente. Um backend rodando 24/7 seria complexidade desnecessária para esse ritmo de atualização. Em vez disso:
-
 CKAN (dados.recife.pe.gov.br)
 │
 ▼
-extract.py  →  data/raw/.csv        (snapshot bruto, não versionado)
+extract.py → data/raw/.csv (snapshot bruto, não versionado)
 │
 ▼
-transform.py  →  data/processed/.json (fonte da verdade, versionado)
+transform.py → data/processed/.json (fonte da verdade, versionado)
 │
 ▼
-pipeline.py sincroniza →  frontend/public/data/*.json
+pipeline.py sincroniza → frontend/public/data/*.json
 │
 ▼
 React lê via fetch() estático — sem backend, sem banco de dados
-
-Isso também permite hospedar o frontend gratuitamente em qualquer serviço de arquivos estáticos (Vercel, Netlify, GitHub Pages), sem custo de infraestrutura de backend.
+Isso também permite hospedar o frontend gratuitamente em qualquer serviço de arquivos estáticos — hoje hospedado em [Cloudflare Pages](https://pages.cloudflare.com), sem custo de infraestrutura de backend.
 
 ### Por que `data/raw/` não é versionado, mas `data/processed/` é
 
@@ -44,6 +42,8 @@ O dataset da Prefeitura do Recife não tem nenhuma coluna indicando "está no Po
 ### Por que isso não bate com o número oficial de "541 empresas embarcadas"
 
 Nosso filtro (999 empresas) é **quase o dobro** do número oficial. Isso é esperado e intencional, não um erro: "embarcada" é um status contratual (empresa formalmente conveniada com o Porto Digital), enquanto nosso filtro captura **qualquer empresa de tecnologia fisicamente localizada** nesses bairros, esteja ela formalmente embarcada ou não. O dashboard expõe os dois números lado a lado de propósito, para deixar essa diferença visível em vez de escondê-la.
+
+**Nota:** o valor de 999 vem da agregação do próprio `transform.py` (campo `esta_no_polo_porto_digital`), calculado dinamicamente a cada execução do pipeline — não é um número fixo neste documento a ser mantido manualmente.
 
 ### Duplicatas no dado bruto
 
@@ -67,20 +67,20 @@ O arquivo inclui os campos `fonte_principal` e `data_verificacao` justamente par
 
 Além do dataset da Prefeitura (empresas de tecnologia por CNAE/bairro), o projeto também consome o diretório oficial de empresas embarcadas do Porto Digital, via um endpoint público (Supabase/PostgREST) descoberto por inspeção de rede em `embarcadas.portodigital.org` — não é uma API documentada oficialmente, mas é a mesma chamada que a própria página pública faz para qualquer visitante, usando uma chave "anon" pública do Supabase (não é credencial secreta).
 
-**Divergência não resolvida:** esse diretório retorna **398 empresas**, predominantemente classificadas como `company_type: "Startup"` (381 de 398, ou 95,7%). Isso não bate com o número oficial de **541 empresas embarcadas** divulgado pelo Porto Digital (ver seção 3, `hero_stats.json`).
+**Divergência não resolvida:** esse diretório retorna um total que varia a cada atualização (398 no momento da descoberta inicial, 400 em execuções mais recentes — o dado é dinâmico e cresce com o tempo), predominantemente classificado como `company_type: "Startup"` (~96% do total). Isso não bate com o número oficial de **541 empresas embarcadas** divulgado pelo Porto Digital (ver seção 3, `hero_stats.json`).
 
 A causa exata dessa diferença **não foi determinada**. Hipóteses consideradas, nenhuma confirmada:
 - O diretório público pode priorizar/filtrar por "startups", sub-representando outras categorias de empresa embarcada (ex: âncoras corporativas maiores, que poderiam estar em outra view não descoberta)
 - Desatualização entre as duas fontes (o hero_stats reflete um release de resultados; o diretório pode ter cadência de atualização diferente)
 - A view consultada pode ter algum filtro adicional não identificado na inspeção de rede
 
-**Tratamento adotado:** os 398 registros são tratados como "diretório de startups/empresas do Porto Digital disponível publicamente", não como sinônimo de "todas as 541 empresas embarcadas". O dashboard não deve apresentar esse número como equivalente ao número oficial — ver `EmbarcadasSummary` (ou componente equivalente) para o texto exato usado.
+**Tratamento adotado:** os registros do diretório são tratados como "diretório de startups/empresas do Porto Digital disponível publicamente", não como sinônimo de "todas as 541 empresas embarcadas". O total exato e o percentual de "Startup" são calculados dinamicamente em tempo de execução (não hardcoded) — ver `App.tsx` (componente `DiretorioIntro`) e `EmbarcadasDirectory.tsx` para onde esse dado é exibido.
 
 ---
 
 ## 4. Becos sem saída (documentados para não serem repetidos)
 
-- **`embarcadas.portodigital.org`** é uma SPA (aplicação client-side) — o HTML vem vazio, os dados reais vêm de uma API JavaScript interna não documentada. Não foi usado como fonte por essa fragilidade.
+- **`embarcadas.portodigital.org`** é uma SPA (aplicação client-side) — o HTML vem vazio, os dados reais vêm de uma API JavaScript interna não documentada. Não foi usado como fonte por essa fragilidade (o endpoint Supabase por trás dela é que foi usado, ver seção 3.1).
 - **`datastore_search_sql`** (extensão CKAN que permitiria queries tipo SQL) está desabilitada na instância do Recife (`Action name not known`). O plano B — baixar o CSV completo e filtrar localmente com Pandas — acabou sendo mais robusto de qualquer forma, por não depender de uma feature específica do servidor.
 - O portal `dados.recife.pe.gov.br` tem `robots.txt` restritivo, o que impede fetch automatizado por ferramentas de terceiros (inclusive assistentes de IA) — mas não impede scripts próprios rodando localmente via `requests`.
 
@@ -110,6 +110,12 @@ O roxo foi uma escolha de identidade de portfólio pessoal (recorrente em outros
 - **IBM Plex Sans** — corpo de texto
 - **IBM Plex Mono** — números e dados (`.data-figure`), reforça a leitura tipo "readout" de painel
 
+### Estados e interação
+
+- **Skeleton loading**: cada componente que busca dado exibe um esqueleto (`Skeleton.tsx`) com a forma aproximada do conteúdo final, em vez de spinner ou texto genérico — evita "pulo" de layout quando o dado chega
+- **Acessibilidade de foco**: todo elemento interativo (chave de tema, sumário lateral, linhas do diretório) tem indicador de foco visível (`:focus-visible`) e é navegável por teclado
+- **`prefers-reduced-motion`** respeitado tanto na contagem animada dos números quanto no efeito de shimmer do skeleton
+
 ---
 
 ## 6. Decisões de versão de dependências
@@ -119,3 +125,4 @@ Registradas aqui porque cada uma envolveu um problema real encontrado durante o 
 - **Vite 7.3, não 8.x** — Vite 8 trouxe reescrita completa do bundler (Rolldown no lugar de Rollup/esbuild); mantivemos 7.3 por maturidade de ecossistema de plugins no momento da escolha
 - **`@vitejs/plugin-react` 4.x, não 6.x** — a versão 6 foi desenhada especificamente para a arquitetura interna do Vite 8; usar com Vite 7 causaria incompatibilidade
 - **ESLint, não Oxlint** — Oxlint ainda não cobre regras type-aware de TypeScript nem `eslint-plugin-jsx-a11y`, ambas relevantes para este projeto
+- **Recharts `Rectangle` (via prop `shape`), não `Cell`** — `Cell` foi deprecado a partir da v3.9.x do Recharts e será removido na v4.0; migramos para o padrão oficial recomendado antes da remoção acontecer
