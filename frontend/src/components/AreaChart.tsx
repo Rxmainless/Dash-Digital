@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   BarChart,
   Bar,
-  Cell,
+  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -10,18 +10,34 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useFetchJSON } from "../hooks/useFetchJSON";
+import { Skeleton } from "./Skeleton";
 
 interface AreaStat {
   primary_area: string;
   total_empresas: number;
 }
 
+type BarShapeProps = React.ComponentProps<typeof Rectangle> & { index?: number };
+
 export function AreaChart() {
   const { data: dados, error } = useFetchJSON<AreaStat[]>("/data/stats_por_area.json");
   const [ativoIndex, setAtivoIndex] = useState<number | null>(null);
 
   if (error) return <p className="lede">Erro: {error}</p>;
-  if (!dados) return <p className="lede">Carregando gráfico...</p>;
+
+  if (!dados) {
+    return (
+      <div>
+        <p className="chart-mini-label">Por área de atuação</p>
+        <div className="chart-panel chart-panel--scroll">
+          <Skeleton height="300px" />
+        </div>
+        <p className="chart-caption">
+          <Skeleton height="0.85rem" width="70%" />
+        </p>
+      </div>
+    );
+  }
 
   const total = dados.reduce((soma, d) => soma + d.total_empresas, 0);
   const ativo = ativoIndex !== null ? dados[ativoIndex] : null;
@@ -63,14 +79,13 @@ export function AreaChart() {
               radius={[0, 3, 3, 0]}
               onMouseEnter={(_, index) => setAtivoIndex(index)}
               onMouseLeave={() => setAtivoIndex(null)}
-            >
-              {dados.map((_, index) => (
-                <Cell
-                  key={index}
-                  fill={index === ativoIndex ? "var(--accent-warm)" : "var(--accent-primary)"}
+              shape={(props: BarShapeProps) => (
+                <Rectangle
+                  {...props}
+                  fill={props.index === ativoIndex ? "var(--accent-warm)" : "var(--accent-primary)"}
                 />
-              ))}
-            </Bar>
+              )}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

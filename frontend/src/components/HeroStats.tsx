@@ -14,12 +14,10 @@ interface HeroStatsData {
 }
 
 export function HeroStats() {
-  const { data: stats, error } = useFetchJSON<HeroStatsData>(
-    "/data/hero_stats.json",
-  );
+  const { data: stats, error } = useFetchJSON<HeroStatsData>("/data/hero_stats.json");
 
-  if (error)
-    return <p className="lede">Erro ao carregar indicadores: {error}</p>;
+  if (error) return <p className="lede">Erro ao carregar indicadores: {error}</p>;
+
   if (!stats) {
     return (
       <>
@@ -40,17 +38,14 @@ export function HeroStats() {
       <p className="section-label">Registro oficial</p>
       <p className="lede">
         Segundo o próprio Porto Digital, o ecossistema soma{" "}
-        <AnimatedNumber value={stats.empresas_embarcadas} /> empresas embarcadas
-        e <AnimatedNumber value={stats.colaboradores} /> colaboradores,
-        responsáveis por{" "}
-        <span className="data-figure">{stats.faturamento_2025}</span> em
+        <AnimatedNumber value={stats.empresas_embarcadas} /> empresas embarcadas e{" "}
+        <AnimatedNumber value={stats.colaboradores} /> colaboradores, responsáveis
+        por <span className="data-figure">{stats.faturamento_2025}</span> em
         faturamento em 2025 — crescimento de{" "}
-        <span className="data-figure">
-          {stats.crescimento_faturamento_2025}
-        </span>{" "}
+        <span className="data-figure">{stats.crescimento_faturamento_2025}</span>{" "}
         em relação ao ano anterior. O distrito ocupa{" "}
-        <AnimatedNumber value={stats.territorio_hectares} /> hectares no centro
-        do Recife há <AnimatedNumber value={anos} /> anos.
+        <AnimatedNumber value={stats.territorio_hectares} /> hectares no centro do
+        Recife há <AnimatedNumber value={anos} /> anos.
       </p>
     </>
   );

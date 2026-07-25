@@ -1,5 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
 import { useFetchJSON } from "../hooks/useFetchJSON";
+import { Skeleton } from "./Skeleton";
 
 interface Embarcada {
   id: number;
@@ -31,15 +32,34 @@ export function EmbarcadasDirectory() {
   }, [embarcadas, busca, areaFiltro]);
 
   if (error) return <p className="lede">Erro ao carregar diretório: {error}</p>;
-  if (!embarcadas) return <p className="lede">Carregando diretório...</p>;
+
+  if (!embarcadas) {
+    return (
+      <div className="directory">
+        <div className="directory-controls">
+          <Skeleton height="2.2rem" width="60%" />
+          <Skeleton height="2.2rem" width="35%" />
+        </div>
+        <div className="skeleton-lines">
+          <Skeleton height="2.4rem" />
+          <Skeleton height="2.4rem" />
+          <Skeleton height="2.4rem" />
+          <Skeleton height="2.4rem" />
+          <Skeleton height="2.4rem" />
+        </div>
+      </div>
+    );
+  }
 
   function alternarExpandido(id: number) {
     setExpandidoId((atual) => (atual === id ? null : id));
   }
 
-  function abrirPerfilOficial(event: React.MouseEvent, id: number) {
-    event.stopPropagation();
-    window.open(`https://embarcadas.portodigital.org/embarcadas/${id}`, "_blank", "noreferrer");
+  function handleRowKeyDown(event: React.KeyboardEvent<HTMLTableRowElement>, id: number) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      alternarExpandido(id);
+    }
   }
 
   return (
@@ -49,11 +69,13 @@ export function EmbarcadasDirectory() {
           type="text"
           className="directory-search"
           placeholder="Buscar por nome..."
+          aria-label="Buscar startup por nome"
           value={busca}
           onChange={(e) => setBusca(e.target.value)}
         />
         <select
           className="directory-filter"
+          aria-label="Filtrar por área de atuação"
           value={areaFiltro}
           onChange={(e) => setAreaFiltro(e.target.value)}
         >
@@ -78,15 +100,16 @@ export function EmbarcadasDirectory() {
           <tbody>
             {filtradas.map((e) => (
               <Fragment key={e.id}>
-                <tr className="directory-table__row" onClick={() => alternarExpandido(e.id)}>
-                  <td>
-                    <span
-                      className="directory-table__name-link"
-                      onClick={(event) => abrirPerfilOficial(event, e.id)}
-                    >
-                      {e.name}
-                    </span>
-                  </td>
+                <tr
+                  className="directory-table__row"
+                  onClick={() => alternarExpandido(e.id)}
+                  onKeyDown={(event) => handleRowKeyDown(event, e.id)}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={expandidoId === e.id}
+                  aria-label={`Ver descrição de ${e.name}`}
+                >
+                  <td><a className="directory-table__name-link" href={`https://embarcadas.portodigital.org/embarcadas/${e.id}`} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>{e.name}</a></td>
                   <td>{e.primary_area}</td>
                   <td>{e.company_type}</td>
                 </tr>
@@ -105,8 +128,8 @@ export function EmbarcadasDirectory() {
 
       <p className="chart-caption">
         {filtradas.length} de {embarcadas.length} empresas exibidas. Clique no nome
-        para abrir o perfil oficial, ou em qualquer outro lugar da linha para ver a
-        descrição completa.
+        para abrir o perfil oficial, ou em qualquer outro lugar da linha (ou aperte
+        Enter/Espaço com o foco na linha) para ver a descrição completa.
       </p>
     </div>
   );

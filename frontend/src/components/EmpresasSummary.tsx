@@ -1,5 +1,6 @@
 import { useFetchJSON } from "../hooks/useFetchJSON";
 import { AnimatedNumber } from "./AnimatedNumber";
+import { Skeleton } from "./Skeleton";
 
 interface Empresa {
   cnpj: string;
@@ -10,7 +11,19 @@ export function EmpresasSummary() {
   const { data: empresas, error } = useFetchJSON<Empresa[]>("/data/empresas_tech.json");
 
   if (error) return <p className="lede">Erro ao carregar dados: {error}</p>;
-  if (!empresas) return <p className="lede">Carregando levantamento de campo...</p>;
+
+  if (!empresas) {
+    return (
+      <>
+        <p className="section-label">Levantamento de campo</p>
+        <div className="skeleton-lines">
+          <Skeleton height="1.4rem" width="95%" />
+          <Skeleton height="1.4rem" width="85%" />
+          <Skeleton height="1.4rem" width="70%" />
+        </div>
+      </>
+    );
+  }
 
   const noPolo = empresas.filter((e) => e.esta_no_polo_porto_digital).length;
 
