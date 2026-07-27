@@ -17,7 +17,7 @@
   },
   {
     "primary_area":"Saúde Humana",
-    "total_empresas":21
+    "total_empresas":23
   },
   {
     "primary_area":"Economia Criativa",
@@ -25,14 +25,14 @@
   },
   {
     "primary_area":"Comércio \/ Varejo",
-    "total_empresas":19
-  },
-  {
-    "primary_area":"Pessoas",
-    "total_empresas":14
+    "total_empresas":20
   },
   {
     "primary_area":"Logística \/ Transporte",
+    "total_empresas":14
+  },
+  {
+    "primary_area":"Pessoas",
     "total_empresas":14
   },
   {
@@ -44,7 +44,7 @@
     "total_empresas":9
   },
   {
-    "primary_area":"Manufatura \/ Industrial",
+    "primary_area":"Construção",
     "total_empresas":8
   },
   {
@@ -52,11 +52,11 @@
     "total_empresas":8
   },
   {
-    "primary_area":"Construção",
+    "primary_area":"Energia",
     "total_empresas":8
   },
   {
-    "primary_area":"Energia",
+    "primary_area":"Manufatura \/ Industrial",
     "total_empresas":8
   },
   {
@@ -73,6 +73,10 @@
   },
   {
     "primary_area":"Mineração",
+    "total_empresas":1
+  },
+  {
+    "primary_area":"Startups",
     "total_empresas":1
   }
 ]
