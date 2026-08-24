@@ -29,7 +29,7 @@
   },
   {
     "primary_area":"Logística \/ Transporte",
-    "total_empresas":14
+    "total_empresas":15
   },
   {
     "primary_area":"Pessoas",
@@ -72,11 +72,11 @@
     "total_empresas":2
   },
   {
-    "primary_area":"Mineração",
-    "total_empresas":1
+    "primary_area":"Startups",
+    "total_empresas":2
   },
   {
-    "primary_area":"Startups",
+    "primary_area":"Mineração",
     "total_empresas":1
   }
 ]
