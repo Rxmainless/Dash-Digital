@@ -1,18 +1,18 @@
 [
   {
     "bairro_normalizado":"RECIFE",
-    "total_empresas":804
+    "total_empresas":810
   },
   {
     "bairro_normalizado":"BOA VISTA",
-    "total_empresas":158
+    "total_empresas":165
   },
   {
     "bairro_normalizado":"SANTO ANTONIO",
-    "total_empresas":38
+    "total_empresas":39
   },
   {
     "bairro_normalizado":"SAO JOSE",
-    "total_empresas":18
+    "total_empresas":17
   }
 ]
