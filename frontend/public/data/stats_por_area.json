@@ -1,7 +1,7 @@
 [
   {
     "primary_area":"Consultoria e Desenvolvimento de Sistemas",
-    "total_empresas":153
+    "total_empresas":156
   },
   {
     "primary_area":"Educação",
@@ -9,7 +9,7 @@
   },
   {
     "primary_area":"Comunicação",
-    "total_empresas":29
+    "total_empresas":31
   },
   {
     "primary_area":"Finanças",
@@ -20,11 +20,11 @@
     "total_empresas":23
   },
   {
-    "primary_area":"Economia Criativa",
+    "primary_area":"Comércio \/ Varejo",
     "total_empresas":20
   },
   {
-    "primary_area":"Comércio \/ Varejo",
+    "primary_area":"Economia Criativa",
     "total_empresas":20
   },
   {
@@ -44,19 +44,19 @@
     "total_empresas":9
   },
   {
-    "primary_area":"Construção",
-    "total_empresas":8
-  },
-  {
     "primary_area":"Meio ambiente \/ Sustentabilidade",
     "total_empresas":8
   },
   {
-    "primary_area":"Energia",
+    "primary_area":"Construção",
     "total_empresas":8
   },
   {
     "primary_area":"Manufatura \/ Industrial",
+    "total_empresas":8
+  },
+  {
+    "primary_area":"Energia",
     "total_empresas":8
   },
   {
@@ -77,6 +77,10 @@
   },
   {
     "primary_area":"Mineração",
+    "total_empresas":1
+  },
+  {
+    "primary_area":"Saúde Animal",
     "total_empresas":1
   }
 ]
