@@ -1,7 +1,7 @@
 [
   {
     "primary_area":"Consultoria e Desenvolvimento de Sistemas",
-    "total_empresas":156
+    "total_empresas":157
   },
   {
     "primary_area":"Educação",
@@ -9,7 +9,7 @@
   },
   {
     "primary_area":"Comunicação",
-    "total_empresas":31
+    "total_empresas":30
   },
   {
     "primary_area":"Finanças",
@@ -17,7 +17,7 @@
   },
   {
     "primary_area":"Saúde Humana",
-    "total_empresas":23
+    "total_empresas":25
   },
   {
     "primary_area":"Comércio \/ Varejo",
@@ -37,15 +37,15 @@
   },
   {
     "primary_area":"Inovação",
-    "total_empresas":11
+    "total_empresas":12
   },
   {
     "primary_area":"Jurídico",
     "total_empresas":9
   },
   {
-    "primary_area":"Meio ambiente \/ Sustentabilidade",
-    "total_empresas":8
+    "primary_area":"Energia",
+    "total_empresas":9
   },
   {
     "primary_area":"Construção",
@@ -56,7 +56,7 @@
     "total_empresas":8
   },
   {
-    "primary_area":"Energia",
+    "primary_area":"Meio ambiente \/ Sustentabilidade",
     "total_empresas":8
   },
   {
@@ -68,15 +68,19 @@
     "total_empresas":6
   },
   {
+    "primary_area":"Startups",
+    "total_empresas":3
+  },
+  {
     "primary_area":"Agricultura",
     "total_empresas":2
   },
   {
-    "primary_area":"Startups",
-    "total_empresas":2
+    "primary_area":"Mineração",
+    "total_empresas":1
   },
   {
-    "primary_area":"Mineração",
+    "primary_area":"Outras",
     "total_empresas":1
   },
   {
