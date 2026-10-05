@@ -12,12 +12,12 @@
     "total_empresas":31
   },
   {
-    "primary_area":"Finanças",
+    "primary_area":"Saúde Humana",
     "total_empresas":26
   },
   {
-    "primary_area":"Saúde Humana",
-    "total_empresas":26
+    "primary_area":"Finanças",
+    "total_empresas":25
   },
   {
     "primary_area":"Comércio \/ Varejo",
@@ -69,7 +69,7 @@
   },
   {
     "primary_area":"Startups",
-    "total_empresas":5
+    "total_empresas":6
   },
   {
     "primary_area":"Agricultura",
