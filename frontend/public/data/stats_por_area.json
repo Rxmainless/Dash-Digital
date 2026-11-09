@@ -1,7 +1,7 @@
 [
   {
     "primary_area":"Consultoria e Desenvolvimento de Sistemas",
-    "total_empresas":159
+    "total_empresas":161
   },
   {
     "primary_area":"Educação",
@@ -12,11 +12,11 @@
     "total_empresas":31
   },
   {
-    "primary_area":"Saúde Humana",
+    "primary_area":"Finanças",
     "total_empresas":26
   },
   {
-    "primary_area":"Finanças",
+    "primary_area":"Saúde Humana",
     "total_empresas":25
   },
   {
@@ -33,7 +33,7 @@
   },
   {
     "primary_area":"Inovação",
-    "total_empresas":15
+    "total_empresas":16
   },
   {
     "primary_area":"Pessoas",
@@ -56,6 +56,10 @@
     "total_empresas":8
   },
   {
+    "primary_area":"Startups",
+    "total_empresas":8
+  },
+  {
     "primary_area":"Meio ambiente \/ Sustentabilidade",
     "total_empresas":8
   },
@@ -65,10 +69,6 @@
   },
   {
     "primary_area":"Turismo",
-    "total_empresas":6
-  },
-  {
-    "primary_area":"Startups",
     "total_empresas":6
   },
   {
